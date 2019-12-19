@@ -7,3 +7,5 @@ marshmallow
 flask-bcrypt
 pyjwt
 pipenv
+pytest-cov
+pytest
