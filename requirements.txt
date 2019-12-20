@@ -1,3 +1,4 @@
+alembic
 flask
 flask-sqlalchemy
 psycopg2
@@ -7,3 +8,4 @@ marshmallow
 flask-bcrypt
 pyjwt
 pipenv
+SQLALCHEMY
