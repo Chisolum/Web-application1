@@ -1,17 +1,17 @@
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
-name = "pypi"
+name = "PYpi"
 
 [packages]
 flask = "*"
-flask-sqlalchemy = "*"
+flask-SQLAlchemy = "*"
 "psycopg2" = "*"
 flask-migrate = "*"
 flask-script = "*"
 marshmallow = "*"
-flask-bcrypt = "*"
-pyjwt = "*"
+flask-BCrypt = "*"
+PYJwt = "*"
 
 [dev-packages]
 
