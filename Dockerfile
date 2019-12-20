@@ -7,4 +7,4 @@ RUN pip install -r ./requirements.txt
 # CMD [ "python", "./run.py"]
 ENTRYPOINT ["python"]
 CMD ["./run.py"]
-manage.py db migrate
+

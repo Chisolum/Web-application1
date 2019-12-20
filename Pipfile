@@ -1,0 +1,22 @@
+[[source]]
+name = "PYpi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+alembic = "*"
+psycopg2 = "*"
+marshmallow = "*"
+pipenv = "*"
+Flask = "*"
+Flask-SQLAlchemy = "*"
+Flask-Migrate = "*"
+Flask-Script = "*"
+Flask-Bcrypt = "*"
+PyJWT = "*"
+SQLAlchemy = "*"
+
+[requires]
+python_version = "3.8"
