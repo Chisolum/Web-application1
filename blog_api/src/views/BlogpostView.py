@@ -1,13 +1,13 @@
 # /src/views/BlogpostView.py
 from flask import request, g, Blueprint, json, Response
 from ..shared.Authentication import Auth
-from ..models.BlogpostModel import BlogpostModel, BlogpostSchema
+from blog_api.src.models.BlogpostModel import BlogPostModel, BlogPostSchema
 
-blogpost_api = Blueprint('blogpost_api', __name__)
-blogpost_schema = BlogpostSchema()
+blogPost_api = Blueprint('blogPost_api', __name__)
+blogPost_schema = BlogPostSchema()
 
 
-@blogpost_api.route('/', methods=['POST'])
+@blogPost_api.route('/', methods=['POST'])
 @Auth.auth_required
 def create():
     """
@@ -15,70 +15,70 @@ def create():
     """
     req_data = request.get_json()
     req_data['owner_id'] = g.user.get('id')
-    data, error = blogpost_schema.load(req_data)
+    data, error = blogPost_schema.load(req_data)
     if error:
         return custom_response(error, 400)
-    post = BlogpostModel(data)
+    post = BlogPostModel(data)
     post.save()
-    data = blogpost_schema.dump(post).data
+    data = blogPost_schema.dump(post).data
     return custom_response(data, 201)
 
 
-@blogpost_api.route('/', methods=['GET'])
+@blogPost_api.route('/', methods=['GET'])
 def get_all():
     """
     Get All Blogposts
     """
-    posts = BlogpostModel.get_all_blogposts()
-    data = blogpost_schema.dump(posts, many=True).data
+    posts = BlogPostModel.get_all_blogposts()
+    data = blogPost_schema.dump(posts, many=True).data
     return custom_response(data, 200)
 
 
-@blogpost_api.route('/<int:blogpost_id>', methods=['GET'])
-def get_one(blogpost_id):
+@blogPost_api.route('/<int:blogPost_id>', methods=['GET'])
+def get_one(blogPost_id):
     """
-    Get A Blogpost
+    Get A BlogPost
     """
-    post = BlogpostModel.get_one_blogpost(blogpost_id)
+    post = BlogPostModel.get_one_blogpost(blogPost_id)
     if not post:
         return custom_response({'error': 'post not found'}, 404)
-    data = blogpost_schema.dump(post).data
+    data = blogPost_schema.dump(post).data
     return custom_response(data, 200)
 
 
-@blogpost_api.route('/<int:blogpost_id>', methods=['PUT'])
+@blogPost_api.route('/<int:blogPost_id>', methods=['PUT'])
 @Auth.auth_required
-def update(blogpost_id):
+def update(blogPost_id):
     """
     Update A Blogpost
     """
     req_data = request.get_json()
-    post = BlogpostModel.get_one_blogpost(blogpost_id)
+    post = BlogPostModel.get_one_blogPost(blogPost_id)
     if not post:
         return custom_response({'error': 'post not found'}, 404)
-    data = blogpost_schema.dump(post).data
+    data = blogPost_schema.dump(post).data
     if data.get('owner_id') != g.user.get('id'):
         return custom_response({'error': 'permission denied'}, 400)
 
-    data, error = blogpost_schema.load(req_data, partial=True)
+    data, error = blogPost_schema.load(req_data, partial=True)
     if error:
         return custom_response(error, 400)
     post.update(data)
 
-    data = blogpost_schema.dump(post).data
+    data = blogPost_schema.dump(post).data
     return custom_response(data, 200)
 
 
-@blogpost_api.route('/<int:blogpost_id>', methods=['DELETE'])
+@blogPost_api.route('/<int:blogPost_id>', methods=['DELETE'])
 @Auth.auth_required
-def delete(blogpost_id):
+def delete(blogPost_id):
     """
-    Delete A Blogpost
+    Delete A BlogPost
     """
-    post = BlogpostModel.get_one_blogpost(blogpost_id)
+    post = BlogPostModel.get_one_blogpost(blogPost_id)
     if not post:
         return custom_response({'error': 'post not found'}, 404)
-    data = blogpost_schema.dump(post).data
+    data = blogPost_schema.dump(post).data
     if data.get('owner_id') != g.user.get('id'):
         return custom_response({'error': 'permission denied'}, 400)
 

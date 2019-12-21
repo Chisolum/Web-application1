@@ -17,6 +17,8 @@ Flask-Script = "*"
 Flask-Bcrypt = "*"
 PyJWT = "*"
 SQLAlchemy = "*"
+pytest-cov = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8"
