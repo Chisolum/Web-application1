@@ -5,3 +5,5 @@ Followed part 1 of the tutorial to create the application.
 https://www.codementor.io/olawalealadeusi896/restful-api-with-python-flask-framework-and-postgres-db-part-1-kbrwbygx5
 
 Part 2 is on Part2 branch  
+
+Part 3 is on WebApplication_part3 branch
