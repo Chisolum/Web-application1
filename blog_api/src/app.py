@@ -3,6 +3,7 @@
 from flask import Flask
 
 from .config import app_config
+from blog_api.src.models import db, bcrypt  # add this new line
 
 
 def create_app(env_name):
@@ -15,11 +16,13 @@ def create_app(env_name):
 
     app.config.from_object(app_config[env_name])
 
-    @app.route('/', methods=['GET'])
-    def index():
-        """
-        example endpoint
-        """
-        return 'Congratulations! Your first endpoint is working'
+    # initializing bcrypt
+    bcrypt.init_app(app)  # add this line
+
+    db.init_app(app)  # add this line
+
+    #####################
+    # existing code remain #
+    ######################
 
     return app

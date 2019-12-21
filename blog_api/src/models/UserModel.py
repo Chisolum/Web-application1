@@ -1,9 +1,9 @@
 # src/models/UserModel.py
 from marshmallow import fields, Schema
 import datetime
-from . import db
-from ..app import bcrypt  # add this line
-from .BlogpostModel import BlogpostSchema
+from .BlogpostModel import db, bcrypt
+from .BlogpostModel import BlogPostSchema
+
 
 class UserModel(db.Model):
     """
@@ -11,14 +11,15 @@ class UserModel(db.Model):
     """
 
     # table name
-    __tablename__ = 'users'
+    __tableName__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=True)
+    password = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime)
     modified_at = db.Column(db.DateTime)
+    blogPosts = db.relationship('BlogPostModel', backref='users', lazy=True)
 
     # class constructor
     def __init__(self, data):
@@ -27,7 +28,7 @@ class UserModel(db.Model):
         """
         self.name = data.get('name')
         self.email = data.get('email')
-        self.password = data.get('password')
+        self.password = self.__generate_hash(data.get('password'))
         self.created_at = datetime.datetime.utcnow()
         self.modified_at = datetime.datetime.utcnow()
 
@@ -37,6 +38,8 @@ class UserModel(db.Model):
 
     def update(self, data):
         for key, item in data.items():
+            if key == 'password':
+                self.password = self.__generate_hash(data)
             setattr(self, key, item)
         self.modified_at = datetime.datetime.utcnow()
         db.session.commit()
@@ -53,105 +56,25 @@ class UserModel(db.Model):
     def get_one_user(id):
         return UserModel.query.get(id)
 
-    def __repr(self):
-        return '<id {}>'.format(self.id)
+    @staticmethod
+    def get_user_by_email(value):
+        return UserModel.query.filter_by(email=value).first()
 
-
-# src/models/UserModel.py
-#####################
-# existing code remain #
-######################
-
-
-class UserModel(db.Model):
-    """
-    User Model
-    """
-
-    # table name
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    #####################
-    # existing code remain #
-    ######################
-
-    # class constructor
-    def __init__(self, data):
-        """
-        Class constructor
-        """
-        self.name = data.get('name')
-        self.email = data.get('email')
-        self.password = self.__generate_hash(data.get('password'))  # add this line
-
-    #####################
-    # existing code remain #
-    ######################
-
-    def update(self, data):
-        for key, item in data.items():
-            if key == 'password':  # add this new line
-                self.password = self.__generate_hash(value)  # add this new line
-            setattr(self, key, item)
-        self.modified_at = datetime.datetime.utcnow()
-        db.session.commit()
-
-    #####################
-    # existing code remain #
-    ######################
-
-    # add this new method
     def __generate_hash(self, password):
         return bcrypt.generate_password_hash(password, rounds=10).decode("utf-8")
 
-    # add this new method
     def check_hash(self, password):
         return bcrypt.check_password_hash(self.password, password)
-
-    #####################
-    # existing code remain #
-    ######################
-
-
-# src/models/UserModel.py
-from marshmallow import fields, Schema
-#####################
-# existing code remains #
-########################
-
-class UserModel(db.Model):
-    """
-    User Model
-    """
-
-    # table name
-    __tablename__ = 'users'
-
-    #####################
-    # existing code remains #
-    ########################
-    modified_at = db.Column(db.DateTime)
-    blogposts = db.relationship('BlogpostModel', backref='users', lazy=True)  # add this new line
-
-    #####################
-    # existing code remains #
-    ########################
 
     def __repr(self):
         return '<id {}>'.format(self.id)
 
 
-# add this class
 class UserSchema(Schema):
-    """
-    User Schema
-    """
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
     email = fields.Email(required=True)
-    password = fields.Str(required=True)
+    password = fields.Str(required=True, load_only=True)
     created_at = fields.DateTime(dump_only=True)
     modified_at = fields.DateTime(dump_only=True)
-    blogposts = fields.Nested(BlogpostSchema, many=True)
+    blogPosts = fields.Nested(BlogPostSchema, many=True)

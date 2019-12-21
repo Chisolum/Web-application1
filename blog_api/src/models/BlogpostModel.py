@@ -1,5 +1,5 @@
 # src/models/BlogpostModel.py
-from . import db
+from blog_api.src.models import db
 import datetime
 from marshmallow import fields, Schema
 
