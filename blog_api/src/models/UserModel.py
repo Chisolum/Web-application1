@@ -1,7 +1,7 @@
 # src/models/UserModel.py
 from marshmallow import fields, Schema
 import datetime
-from .BlogpostModel import db, bcrypt
+from . import db, bcrypt
 from .BlogpostModel import BlogPostSchema
 
 
